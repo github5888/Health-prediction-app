@@ -36,12 +36,17 @@ def get_one(id):
 
 def add_patient(name, dob, email, glucose, haemoglobin, cholesterol, remarks):
     conn = connect()
+    existing = conn.execute("SELECT id FROM patients WHERE email = ?", (email,)).fetchone()
+    if existing:
+        conn.close()
+        return False
     conn.execute("""
         INSERT INTO patients (full_name, dob, email, glucose, haemoglobin, cholesterol, remarks)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (name, dob, email, glucose, haemoglobin, cholesterol, remarks))
     conn.commit()
     conn.close()
+    return True
 
 def update_patient(id, name, dob, email, glucose, haemoglobin, cholesterol, remarks):
     conn = connect()

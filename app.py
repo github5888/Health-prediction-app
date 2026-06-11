@@ -109,7 +109,10 @@ def add():
         # get ai remark
         remark = get_ai_remark(glucose, haemoglobin, cholesterol)
 
-        add_patient(name, dob, email, glucose, haemoglobin, cholesterol, remark)
+        if not add_patient(name, dob, email, glucose, haemoglobin, cholesterol, remark):
+            flash("A patient with this email already exists.", "danger")
+            return render_template("form.html", title="Add Patient", action="/add", data=request.form)
+
         flash("Patient added successfully!", "success")
         return redirect(url_for("home"))
 
